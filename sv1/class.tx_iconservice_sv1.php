@@ -40,35 +40,37 @@ class tx_iconservice_sv1 extends t3lib_svbase {
 	public $scriptRelPath = 'sv1/class.tx_iconservice_sv1.php';
 	public $extKey = 'icon_service';
 
+	protected $settings = array();
+
 	/**
-	 * Initializes this service.
+	 * Initializes settings for this service.
 	 */
-	public function init() {
-		$available = parent::init();
+	protected function initSettings() {
+		if (TYPO3_MODE === 'FE') {
+			$this->settings = $GLOBALS['TSFE']->tmpl->setup['service.'][$this->prefixId . '.'];
+		} else {
+			// $TYPO3_CONF_VARS['SVCONF']['icon']['setup']['skin'] = 'crystal';
+			// $TYPO3_CONF_VARS['SVCONF']['icon']['setup']['flavour'] = '16x16';
+			$this->settings = $GLOBALS['TYPO3_CONF_VARS']['SVCONF']['icon']['setup'];
+		}
 
-			// Here you can initialize your class.
-
-			// The class have to do a strict check if the service is available.
-			// The needed external programs are already checked in the parent class.
-
-			// If there's no reason for initialization you can remove this function.
-
-		return $available;
+		$extRelPath = substr(t3lib_extMgm::extPath($this->extKey), strlen(PATH_site));
+		$this->settings['iconPath'] = $extRelPath . 'Resources/Public/' . $this->settings['skin'] . '/' . $this->settings['flavour'] . '/';
 	}
 
 	/**
-	 * Performs the service processing.
+	 * Returns an icon according to the mimetype of the given filename.
 	 *
-	 * @param	string		Content which should be processed.
-	 * @param	string		Content type
-	 * @param	array		Configuration array
-	 * @return	boolean
+	 * @param	string		$filename
+	 * @return	string		Path to the icon file (relative to website's root)
 	 */
-	public function process($content = '', $type = '', array $conf = array()) {
-			// Depending on the service type there's not a process() function.
-			// You have to implement the API of that service type.
-	
-		return FALSE;
+	public function getIcon($filename = '') {
+		$this->initSettings();
+
+		$ext = strtolower(substr($filename, strrpos($filename, '.') + 1));
+		if (is_file($this->settings['iconPath'] . $ext . '.png')) {
+			return $this->settings['iconPath'] . $ext . '.png';
+		}
 	}
 }
 

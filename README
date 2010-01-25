@@ -1,0 +1,7 @@
+Example of use:
+
+$filename = 'path/to/some-file.pdf';
+if (is_object($iconService = t3lib_div::makeInstanceService('icon', 'filetype'))) {
+	$icon = $iconService->getIcon($filename);
+	$img = '<img src="' . $icon . '" alt="" />';
+}
