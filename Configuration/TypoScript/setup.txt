@@ -1,4 +1,4 @@
 service.tx_iconservice_sv1 {
-	skin = crystal_project
-	flavour = 24x24
+	skin = default
+	flavour = 16x16
 }
