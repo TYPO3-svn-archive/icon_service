@@ -46,12 +46,13 @@ class tx_iconservice_sv1 extends t3lib_svbase {
 	 * Initializes settings for this service.
 	 */
 	protected function initSettings() {
+			// $TYPO3_CONF_VARS['SVCONF']['icon']['setup']['skin'] = 'crystal_project';
+			// $TYPO3_CONF_VARS['SVCONF']['icon']['setup']['flavour'] = '24x24';
+		$this->settings['skin'] = $this->getServiceOption('skin', 'default');
+		$this->settings['flavour'] = $this->getServiceOption('flavour', '16x16');
+
 		if (TYPO3_MODE === 'FE') {
-			$this->settings = $GLOBALS['TSFE']->tmpl->setup['service.'][$this->prefixId . '.'];
-		} else {
-			// $TYPO3_CONF_VARS['SVCONF']['icon']['setup']['skin'] = 'crystal';
-			// $TYPO3_CONF_VARS['SVCONF']['icon']['setup']['flavour'] = '16x16';
-			$this->settings = $GLOBALS['TYPO3_CONF_VARS']['SVCONF']['icon']['setup'];
+			$this->settings = array_merge($this->settings, $GLOBALS['TSFE']->tmpl->setup['service.'][$this->prefixId . '.']);
 		}
 
 		$extRelPath = substr(t3lib_extMgm::extPath($this->extKey), strlen(PATH_site));
